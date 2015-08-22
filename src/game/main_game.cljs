@@ -3,7 +3,7 @@
 (defn MainGame [game]
   (let [still-frame 0
         anim-frame-rate 2
-        speed 10
+        speed 5
 
         dialogue-style (clj->js {:font "20px Arial"
                                  :fill "white"})
@@ -36,6 +36,8 @@
         ;; Set up input
         (set! (.. this -cursors)
               (.. game -input -keyboard (createCursorKeys)))
+        (set! (.. this -spacebar) (.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR)))
+
 
         ;; Set up camera
         (.. this -player -anchor (setTo 0.5 0.5))
@@ -44,39 +46,57 @@
 
         (set! (.. this -dialogue-box -fixedToCamera) true)
         (set! (.. this -dialogue-text -fixedToCamera) true)
+        (set! (.-dialogue this) ["First" "Second" "Third" "Fourth"])
+        (set! (.. this -lastDUpdate) (.. game -time -now))
+
         )
 
       (update [this]
-        (cond
-          (.. this -cursors -up -isDown)
-          (do
-            (let [y  (.. this -player -y)]
-              (set! (.. this -player -y)
-                    (- y speed)))
-            (.. this -player -animations (play "up")))
 
-          (.. this -cursors -down -isDown)
+        (if-let [d (seq (.-dialogue this))]
           (do
-            (let [y  (.. this -player -y)]
-              (set! (.. this -player -y)
-                    (+ y speed)))
-            (.. this -player -animations (play "down")))
+            (.. this -dialogue-text (setText (first d)))
+            (when (and (.. this -spacebar -isDown)
+                       (> (- (.. game -time -now)
+                             (.. this -lastDUpdate))
+                          1000))
+              (do
+                (set! (.. this -lastDUpdate) (.. game -time -now))
+                (.. this -dialogue-text (setText ""))
+                (set! (.-dialogue this) (rest d)))))
 
-          (.. this -cursors -left -isDown)
-          (do
-            (let [x  (.. this -player -x)]
-              (set! (.. this -player -x)
-                    (- x speed)))
-            (.. this -player -animations (play "left")))
 
-          (.. this -cursors -right -isDown)
-          (do
-            (let [x  (.. this -player -x)]
-              (set! (.. this -player -x)
-                    (+ x speed)))
-            (.. this -player -animations (play "right")))
+          ;; Basic Movement
+          (cond
+            (.. this -cursors -up -isDown)
+            (do
+              (let [y  (.. this -player -y)]
+                (set! (.. this -player -y)
+                      (- y speed)))
+              (.. this -player -animations (play "up")))
 
-          :else (set! (.. this -player -frame) still-frame))
+            (.. this -cursors -down -isDown)
+            (do
+              (let [y  (.. this -player -y)]
+                (set! (.. this -player -y)
+                      (+ y speed)))
+              (.. this -player -animations (play "down")))
+
+            (.. this -cursors -left -isDown)
+            (do
+              (let [x  (.. this -player -x)]
+                (set! (.. this -player -x)
+                      (- x speed)))
+              (.. this -player -animations (play "left")))
+
+            (.. this -cursors -right -isDown)
+            (do
+              (let [x  (.. this -player -x)]
+                (set! (.. this -player -x)
+                      (+ x speed)))
+              (.. this -player -animations (play "right")))
+
+            :else (set! (.. this -player -frame) still-frame)))
 
         (.collideWorld this))
 
