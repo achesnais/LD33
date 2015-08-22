@@ -14,10 +14,10 @@
         (js/console.log "Entering Main Game!")
 
         ;; Define world bounds
-        (.. game -world (setBounds 0 0 600 700))
+        (.. game -world (setBounds 0 -100 600 700))
 
         ;; Populate world
-        (.. game -add (sprite 0 100 "world"))
+        (.. game -add (sprite 0 0 "world"))
         (set! (.. this -dialogue-box) (.. game -add (sprite 0 0 "dialogue-box")))
         (set! (.. this -dialogue-text)
               (.. game -add (text (/ (.. game -camera -width) 2)
@@ -40,6 +40,7 @@
         ;; Set up camera
         (.. this -player -anchor (setTo 0.5 0.5))
         (.. game -camera (follow (.-player this)))
+        #_(set! (.. game -player -cameraOffset) 0 100)
 
         (set! (.. this -dialogue-box -fixedToCamera) true)
         (set! (.. this -dialogue-text -fixedToCamera) true)
@@ -77,14 +78,14 @@
 
           :else (set! (.. this -player -frame) still-frame))
 
-        (.collide this))
+        (.collideWorld this))
 
-      (collide [this]
+      (collideWorld [this]
         (let [p (.-player this)]
-          (when (< (.-y p) 140)
-            (set! (.-y p) 140))
-          (when (> (.-y p) 660)
-            (set! (.-y p) 660))
+          (when (< (.-y p) 40)
+            (set! (.-y p) 40))
+          (when (> (.-y p) 560)
+            (set! (.-y p) 560))
           (when (< (.-x p) 30)
             (set! (.-x p) 30))
           (when (> (.-x p) 570)
