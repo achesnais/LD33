@@ -14,7 +14,7 @@
 
       ;; Loading all the assets
       (.. game -load (image "dialogue-box" "assets/dialogue-box.png"))
-      (.. game -load (image "floor" "assets/floor.png"))
+      (.. game -load (image "world" "assets/world.png"))
       (.. game -load (image "glass1" "assets/glass1.png"))
       (.. game -load (image "glass2" "assets/glass2.png"))
       (.. game -load (image "glass3" "assets/glass3.png"))
