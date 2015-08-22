@@ -82,11 +82,11 @@
         (set! (.. this -glass2Rect) (js/Phaser.Rectangle. 25 380 80 80))
         (set! (.. this -glass2Events) (:glass2 dialogueTree))
 
-        (set! (.. this -glass3Rect) (js/Phaser.Rectangle. 490 180 80 80))
-        (set! (.. this -glass1Events) (:glass1 dialogueTree))
+        (set! (.. this -glass3Rect) (js/Phaser.Rectangle. 490 380 80 80))
+        (set! (.. this -glass3Events) (:glass3 dialogueTree))
 
-        (set! (.. this -glass4Rect) (js/Phaser.Rectangle. 490 380 80 80))
-        (set! (.. this -glass4Events) (:glass2 dialogueTree))
+        (set! (.. this -glass4Rect) (js/Phaser.Rectangle. 490 180 80 80))
+        (set! (.. this -glass4Events) (:glass4 dialogueTree))
 
         (set! (.. this -throneRect) (js/Phaser.Rectangle. 225 20 170 195))
         (set! (.. this -throneEvents) (:throne dialogueTree))
@@ -254,7 +254,7 @@
               (do
                 (set! (.. this -dialogue) (first evs))
                 (set! (.. this -glass3Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Ascension" "..."]))
+            (set! (.. this -dialogue) ["The Crier"  "..."]))
 
           :glass4
           (if (seq (.. this -glass4Events))
@@ -262,7 +262,7 @@
               (do
                 (set! (.. this -dialogue) (first evs))
                 (set! (.. this -glass4Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Crier" "..."]))
+            (set! (.. this -dialogue) ["The Ascension" "..."]))
 
           :throne
           (if (seq (.. this -throneEvents))
