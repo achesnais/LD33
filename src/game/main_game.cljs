@@ -22,6 +22,27 @@
         (set! (.. this -player) (.. game -add (sprite 280 540 "player")))
         (set! (.. this -weaponSprite) (.. game -add (sprite 295 5 "weapon")))
 
+        ;; Glasses
+
+        (let [gs (.. game -add (sprite 0 100 "glass1"))]
+          (set! (.. gs -visible) false)
+          (set! (.. gs -fixedToCamera) true)
+          (set! (.. this -g1) gs))
+        (let [gs (.. game -add (sprite 0 100 "glass2"))]
+          (set! (.. gs -visible) false)
+          (set! (.. gs -fixedToCamera) true)
+          (set! (.. this -g2) gs))
+        (let [gs (.. game -add (sprite 0 100 "glass3"))]
+          (set! (.. gs -visible) false)
+          (set! (.. gs -fixedToCamera) true)
+          (set! (.. this -g3) gs))
+        (let [gs (.. game -add (sprite 0 100 "glass4"))]
+          (set! (.. gs -visible) false)
+          (set! (.. gs -fixedToCamera) true)
+          (set! (.. this -g4) gs))
+
+
+
         ;; Define animations
         (.. this -player -animations (add "down" (clj->js [0 1 2]) anim-frame-rate true))
         (.. this -player -animations (add "up" (clj->js [3 4 5]) anim-frame-rate true))
@@ -70,7 +91,7 @@
         (set! (.. this -throneRect) (js/Phaser.Rectangle. 225 20 170 195))
         (set! (.. this -throneEvents) (:throne dialogueTree))
 
-        (set! (.. this -doorRect) (js/Phaser.Rectangle. 280 540 40 40))
+        (set! (.. this -doorRect) (js/Phaser.Rectangle. 285 540 40 40))
         (set! (.. this -doorEvents) (:door dialogueTree))
 
         (set! (.. this -weapon) false)
@@ -103,9 +124,22 @@
               (.. game -state (start "ending")))
             ))
 
+        ;; hide all glasses until we know we're in a dialogue
+        (do
+          (set! (.. this -g1 -visible) false)
+          (set! (.. this -g2 -visible) false)
+          (set! (.. this -g3 -visible) false)
+          (set! (.. this -g4 -visible) false))
+
         ;; Dialogue situation - no movement
         (if-let [d (seq (.-dialogue this))]
           (do
+            (when-let [g (.. this -currentGlass)]
+              (case g
+                :glass1  (set! (.. this -g1 -visible) true)
+                :glass2 (set! (.. this -g2 -visible) true)
+                :glass3 (set! (.. this -g3 -visible) true)
+                :glass4 (set! (.. this -g4 -visible) true)))
             (.. this -dialogueText (setText (first d)))
             (when (and (.. this -spacebar -isDown)
                        (> (- (.. game -time -now)
@@ -115,8 +149,6 @@
                 (set! (.. this -lastSpace) (.. game -time -now))
                 (.. this -dialogueText (setText ""))
                 (set! (.-dialogue this) (rest d)))))
-
-
 
 
           ;; Basic Movement
