@@ -64,6 +64,12 @@
         (set! (.. this -glass4Rect) (js/Phaser.Rectangle. 490 380 80 80))
         (set! (.. this -glass4Events) (:glass2 dialogueTree))
 
+        (set! (.. this -throneRect) (js/Phaser.Rectangle. 225 20 170 195))
+        (set! (.. this -throneEvents) (:throne dialogueTree))
+
+        (set! (.. this -doorRect) (js/Phaser.Rectangle. 280 540 40 40))
+        (set! (.. this -doorEvents) (:door dialogueTree))
+
         )
 
       (update [this]
@@ -152,6 +158,8 @@
           (js/Phaser.Rectangle.containsPoint (.. this -glass2Rect) (.-player this)) :glass2
           (js/Phaser.Rectangle.containsPoint (.. this -glass3Rect) (.-player this)) :glass3
           (js/Phaser.Rectangle.containsPoint (.. this -glass4Rect) (.-player this)) :glass4
+          (js/Phaser.Rectangle.containsPoint (.. this -throneRect) (.-player this)) :throne
+          (js/Phaser.Rectangle.containsPoint (.. this -doorRect) (.-player this)) :door
           :else false))
 
       (triggerDialogue [this k]
@@ -187,10 +195,28 @@
               (do
                 (set! (.. this -dialogue) (first evs))
                 (set! (.. this -glass4Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Crier" "..."]))))
+            (set! (.. this -dialogue) ["The Crier" "..."]))
+
+          :throne
+          (if (seq (.. this -throneEvents))
+            (let [evs (.. this -throneEvents)]
+              (do
+                (set! (.. this -dialogue) (first evs))
+                (set! (.. this -throneEvents) (rest evs))))
+            (set! (.. this -dialogue) ["This throne is long cold." "..."]))
+
+          :door
+          (if (seq (.. this -doorEvents))
+            (let [evs (.. this -doorEvents)]
+              (do
+                (set! (.. this -dialogue) (first evs))
+                (set! (.. this -doorEvents) (rest evs))))
+            (set! (.. this -dialogue) ["I must find another way out..."]))))
 
       (render [this]
         (.. game -debug (geom (.. this -glass1Rect) "#0fffff"))
         (.. game -debug (geom (.. this -glass2Rect) "#0fffff"))
         (.. game -debug (geom (.. this -glass3Rect) "#0fffff"))
-        (.. game -debug (geom (.. this -glass4Rect) "#0fffff"))))))
+        (.. game -debug (geom (.. this -glass4Rect) "#0fffff"))
+        (.. game -debug (geom (.. this -throneRect) "#0fffff"))
+        (.. game -debug (geom (.. this -doorRect) "#0fffff"))))))
