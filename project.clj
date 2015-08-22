@@ -1,6 +1,6 @@
-(defproject phaser-cljs-boilerplate "0.1.0-SNAPSHOT"
-  :description "A boilerplate for writing games in clojurescript using phaser.io."
-  :url "https://github.com/achesnais/phaser-cljs-boilerplate"
+(defproject LD33 "0.1.0-SNAPSHOT"
+  :description "My entry for LD33"
+  :url "https://github.com/achesnais/LD33"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]
