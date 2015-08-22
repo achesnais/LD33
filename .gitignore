@@ -12,3 +12,4 @@ pom.xml.asc
 /resources/public/game.js
 /resources/public/js/out
 /figwheel_server.log
+/resources/public/js/game.js
