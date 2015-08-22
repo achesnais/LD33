@@ -1,11 +1,13 @@
 (ns game.boot)
 
 (defn Boot [game]
-  (let []
-    (reify Object
-      (preload [this]
-        ())
-      (create [this]
-        (set! (.. game -scale -pageAlignHorizontally) true)
-        (set! (.. game -scale -pageAlignVertically) true)
-        (.. game -state (start "preload"))))))
+  (reify Object
+
+    (preload [this]
+      (.. game -load (image "preloadBar" "assets/loading-bar.png")))
+
+    (create [this]
+      (set! (.. game -scale -pageAlignHorizontally) true)
+      (set! (.. game -scale -pageAlignVertically) true)
+      (set! (.. game -stage -backgroundColor) "#000000")
+      (.. game -state (start "preload")))))
