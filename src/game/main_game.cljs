@@ -19,14 +19,8 @@
 
         ;; Populate world
         (.. game -add (sprite 0 0 "world"))
-        (set! (.. this -dialogue-box) (.. game -add (sprite 0 0 "dialogue-box")))
-        (set! (.. this -dialogue-text)
-              (.. game -add (text (/ (.. game -camera -width) 2)
-                                  50
-                                  ""
-                                  dialogue-style)))
-        (.. this -dialogue-text -anchor (setTo 0.5 0.5))
-        (set! (.. this -player) (.. game -add (sprite 10 10 "player")))
+        (set! (.. this -player) (.. game -add (sprite 280 540 "player")))
+        (set! (.. this -weaponSprite) (.. game -add (sprite 295 5 "weapon")))
 
         ;; Define animations
         (.. this -player -animations (add "down" (clj->js [0 1 2]) anim-frame-rate true))
@@ -38,6 +32,7 @@
         (set! (.. this -cursors)
               (.. game -input -keyboard (createCursorKeys)))
         (set! (.. this -spacebar) (.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR)))
+        (set! (.. this -action) (.. game -input -keyboard (addKey js/Phaser.Keyboard.ENTER)))
 
 
         ;; Set up camera
@@ -46,8 +41,16 @@
         #_(set! (.. game -player -cameraOffset) 0 100)
 
         ;; Set up dialogue box
-        (set! (.. this -dialogue-box -fixedToCamera) true)
-        (set! (.. this -dialogue-text -fixedToCamera) true)
+        (set! (.. this -dialogueBox) (.. game -add (sprite 0 0 "dialogueBox")))
+        (set! (.. this -dialogueText)
+              (.. game -add (text (/ (.. game -camera -width) 2)
+                                  50
+                                  ""
+                                  dialogue-style)))
+        (.. this -dialogueText -anchor (setTo 0.5 0.5))
+        (set! (.. this -dialogueBox -fixedToCamera) true)
+        (set! (.. this -dialogueText -fixedToCamera) true)
+        (set! (.. this -spaceText))
         (set! (.. this -lastSpace) (.. game -time -now))
         #_(.triggerDialogue this ["First" "Second"])
 
@@ -70,22 +73,50 @@
         (set! (.. this -doorRect) (js/Phaser.Rectangle. 280 540 40 40))
         (set! (.. this -doorEvents) (:door dialogueTree))
 
+        (set! (.. this -weapon) false)
+        (set! (.. this -weaponSpotted) false)
+        (set! (.. this -atThrone) false)
+        (set! (.. this -currentGlass) nil)
+
         )
 
       (update [this]
 
+        ;; If possible, offer weapon
+        (when (and (.. this -atThrone) (.. this -weaponSpotted) (not (.. this -weapon)))
+          (do
+            ;;TODO text to indicate to pick up
+            (when (.. this -action -isDown)
+              (set! (.. this -weapon) true)
+              (.. this -weaponSprite destroy)
+              (.. this -player (loadTexture "playerHammer" 0))
+              (.. this (triggerDialogue :hammer)))
+            ))
+
+        ;; If possible, offer to break glass
+        (when (and (.. this -weapon)
+                   (.. this -currentGlass))
+          (do
+            ;;TODO text to offer to break the glass
+            (when (.. this -action -isDown)
+              (set! (.. game -broken) (.. this -currentGlass))
+              (.. game -state (start "ending")))
+            ))
+
         ;; Dialogue situation - no movement
         (if-let [d (seq (.-dialogue this))]
           (do
-            (.. this -dialogue-text (setText (first d)))
+            (.. this -dialogueText (setText (first d)))
             (when (and (.. this -spacebar -isDown)
                        (> (- (.. game -time -now)
                              (.. this -lastSpace))
                           500))
               (do
                 (set! (.. this -lastSpace) (.. game -time -now))
-                (.. this -dialogue-text (setText ""))
+                (.. this -dialogueText (setText ""))
                 (set! (.-dialogue this) (rest d)))))
+
+
 
 
           ;; Basic Movement
@@ -120,29 +151,33 @@
 
             :else (set! (.. this -player -frame) still-frame)))
 
-        (.collideWorld this)
-        (when-let [ce (.collideEvents this)]
-          #_(js/console.log ce
-                            (.. this -lastSpace)
-                            (- (.. game -time -now)
-                               (.. this -lastSpace)))
-          (when (and (.. this -spacebar -isDown)
-                     (> (- (.. game -time -now)
-                           (.. this -lastSpace))
-                        500))
-            (do
-              (js/console.log "HEY")
-              (set! (.. this -lastSpace) (.. game -time -now))
-              (.triggerDialogue this ce))))
+        (set! (.. this -atThrone) false)
+        (set! (.. this -currentGlass) false)
 
-        ;; DEBUG
-        #_(js/console.log (str "Player posx: " (.. this -player -x) " posy: " (.. this -player -y)))
-        )
+        (.collideWorld this)
+
+        (when-let [ce (.collideEvents this)]
+          (do
+
+            (cond
+              (= :throne ce) (set! (.. this -atThrone) true)
+              (not= :door ce) (set! (.. this -currentGlass) ce))
+
+            (when (and (.. this -spacebar -isDown)
+                       (> (- (.. game -time -now)
+                             (.. this -lastSpace))
+                          500))
+              (do
+                (set! (.. this -lastSpace) (.. game -time -now))
+                (when (and (.. this -atThrone)
+                           (not (.. this -weaponSpotted)))
+                  (set! (.. this -weaponSpotted) true))
+                (.triggerDialogue this ce))))))
 
       (collideWorld [this]
         (let [p (.-player this)]
 
-          ;; Collide the world
+
           (when (< (.-y p) 40)
             (set! (.-y p) 40))
           (when (> (.-y p) 560)
@@ -211,7 +246,10 @@
               (do
                 (set! (.. this -dialogue) (first evs))
                 (set! (.. this -doorEvents) (rest evs))))
-            (set! (.. this -dialogue) ["I must find another way out..."]))))
+            (set! (.. this -dialogue) ["I must find another way out..."]))
+
+          :hammer
+          (set! (.. this -dialogue) ["You pick up the Royal Hammer."])))
 
       (render [this]
         (.. game -debug (geom (.. this -glass1Rect) "#0fffff"))

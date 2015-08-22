@@ -15,6 +15,9 @@
    :glass4
    []
    :throne
-   []
+   [["A throne, defaced by time..."
+     "... the stone is cold..."
+     "... to the touch."
+     "You notice a Royal Hammer above it."]]
    :door
    []})
