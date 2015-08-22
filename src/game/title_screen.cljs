@@ -26,7 +26,8 @@
                                  instructions-style))]
 
         (.. instr-text -anchor (set 0.5))
-        (.. title-text -anchor (set 0.5))
+        (.. title-text -anchor (set 0.5))))
 
-        (.. game -input -keyboard
-            (addCallbacks nil nil #(.. game -state (start "mainGame"))))))))
+    (update [this]
+      (if (.. game -input -keyboard (isDown js/Phaser.Keyboard.SPACEBAR))
+        (.. game -state (start "mainGame" true))))))
