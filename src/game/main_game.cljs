@@ -289,4 +289,5 @@
         (.. game -debug (geom (.. this -glass3Rect) "#0fffff"))
         (.. game -debug (geom (.. this -glass4Rect) "#0fffff"))
         (.. game -debug (geom (.. this -throneRect) "#0fffff"))
-        (.. game -debug (geom (.. this -doorRect) "#0fffff"))))))
+        (.. game -debug (geom (.. this -doorRect) "#0fffff"))
+        (.. game -debug (spriteInfo (.. this -player) 32 32))))))
