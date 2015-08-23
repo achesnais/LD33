@@ -56,8 +56,10 @@
         ;; Input
         (set! (.. this -cursors)
               (.. game -input -keyboard (createCursorKeys)))
-        (set! (.. this -spacebar)
-              (.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR)))
+        (set! (.. this -interact)
+              ;;Switching to E as space is not ideal for browsers
+              #_(.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR))
+              (.. game -input -keyboard (addKey js/Phaser.Keyboard.E)))
         (set! (.. this -action)
               (.. game -input -keyboard (addKey js/Phaser.Keyboard.ENTER)))
 
@@ -80,12 +82,12 @@
         (.. this -dialogueText -anchor (setTo 0.5 0.5))
         (set! (.. this -dialogueText -fixedToCamera) true)
 
-        (set! (.. this -spaceText)
+        (set! (.. this -interactText)
               (.. game -add (text (* 0.05 (.. game -camera -width))
                                   10
-                                  "(spacebar: interact)"
+                                  "(e : interact)"
                                   (clj->js {:font "10px Arial" :fill "grey"}))))
-        (set! (.. this -spaceText -fixedToCamera) true)
+        (set! (.. this -interactText -fixedToCamera) true)
 
         (set! (.. this -hammerText)
               (.. game -add (text (* 0.70 (.. game -camera -width))
@@ -95,7 +97,7 @@
         (set! (.. this -hammerText -fixedToCamera) true)
         (set! (.. this -hammerText -visible) false)
 
-        (set! (.. this -lastSpace) (.. game -time -now))
+        (set! (.. this -lastInteract) (.. game -time -now))
 
         ;; Events
         (set! (.. this -glass1Rect) (js/Phaser.Rectangle. 100 775 90 90))
@@ -176,12 +178,12 @@
                 :glass3 (set! (.. this -g3 -visible) true)
                 :glass4 (set! (.. this -g4 -visible) true)))
             (.. this -dialogueText (setText (first d)))
-            (when (and (.. this -spacebar -isDown)
+            (when (and (.. this -interact -isDown)
                        (> (- (.. game -time -now)
-                             (.. this -lastSpace))
+                             (.. this -lastInteract))
                           m-per-sec))
               (do
-                (set! (.. this -lastSpace) (.. game -time -now))
+                (set! (.. this -lastInteract) (.. game -time -now))
                 (.. this -dialogueText (setText ""))
                 (set! (.-dialogue this) (rest d)))))
 
@@ -237,12 +239,12 @@
               (= :throne ce) (set! (.. this -atThrone) true)
               (not= :door ce) (set! (.. this -currentGlass) ce))
 
-            (when (and (.. this -spacebar -isDown)
+            (when (and (.. this -interact -isDown)
                        (> (- (.. game -time -now)
-                             (.. this -lastSpace))
+                             (.. this -lastInteract))
                           500))
               (do
-                (set! (.. this -lastSpace) (.. game -time -now))
+                (set! (.. this -lastInteract) (.. game -time -now))
                 (when (and (.. this -atThrone)
                            (not (.. this -weaponSpotted)))
                   (set! (.. this -weaponSpotted) true))

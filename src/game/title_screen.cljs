@@ -9,7 +9,7 @@
                                   :fill "white"})
             title-x (* 0.5 (.. game -camera -width))
             title-y (* 0.33 (.. game -camera -height))
-            instructions "Press space to begin."
+            instructions "Press Enter to begin."
             instructions-style (clj->js {:font "18px Arial"
                                          :fill "grey"})
             instr-x (* 0.5 (.. game -camera -width))
@@ -32,7 +32,7 @@
         (.. this -titleText -anchor (set 0.5))))
 
     (update [this]
-      (if (.. game -input -keyboard (isDown js/Phaser.Keyboard.SPACEBAR))
+      (if (.. game -input -keyboard (isDown js/Phaser.Keyboard.ENTER))
         (.. game -state (start "mainGame" true))))
 
     (render [this]

@@ -66,10 +66,10 @@
           (set! (.. this -glass) (.. game -add (sprite 0 100 "glass4"))))
 
 
-        (set! (.. this -lastSpace) (.. game -time -now))
+        (set! (.. this -lastInteract) (.. game -time -now))
 
         ;; Spacebar
-        (set! (.. this -spacebar) (.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR)))
+        (set! (.. this -interact) (.. game -input -keyboard (addKey js/Phaser.Keyboard.E)))
 
         ))
 
@@ -81,12 +81,12 @@
           (seq b)
           (do
             (.. this -endText (setText (first b)))
-            (when (and (.. this -spacebar -isDown)
+            (when (and (.. this -interact -isDown)
                        (> (- (.. game -time -now)
-                             (.. this -lastSpace))
+                             (.. this -lastInteract))
                           500))
               (do
-                (set! (.. this -lastSpace) (.. game -time -now))
+                (set! (.. this -lastInteract) (.. game -time -now))
                 (.. this -endText (setText ""))
                 (set! (.-beforeTextQueue this) (rest b)))))
 
@@ -95,12 +95,12 @@
             (set! (.. this -endText -y) (/ (.. game -camera -height) 2))
             (set! (.. this -glass -visible) false)
             (.. this -endText (setText (first a)))
-            (when (and (.. this -spacebar -isDown)
+            (when (and (.. this -interact -isDown)
                        (> (- (.. game -time -now)
-                             (.. this -lastSpace))
+                             (.. this -lastInteract))
                           500))
               (do
-                (set! (.. this -lastSpace) (.. game -time -now))
+                (set! (.. this -lastInteract) (.. game -time -now))
                 (.. this -endText (setText ""))
                 (set! (.-afterTextQueue this) (rest a)))))
 
