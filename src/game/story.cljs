@@ -58,11 +58,7 @@
      "...that causes so much pain."]]
    :glass3
    [["This one I know well..."
-     "... \"The Tear\""
-     "An old chant:"
-     "\"Let me look at you and cry.\""
-     "\"But one tear.\""
-     "\"One late, one bitter tear.\""]
+     "... \"The Tear\""]
     ["To them crying was both..."
      "...weakness..."
      "...and truth..."
@@ -73,11 +69,14 @@
      "...in this."]
     ["...if I get close enough..."
      "...I can see my reflection in it..."]
-    ["...accounts say..."
+    ["...another irony:"
+     "...accounts say..."
      "...that the last of their people"
      "...died alone..."
      "...because no one..."
-     "...would want to look at them."]
+     "...would want to look at them."
+     "...so monstruous..."
+     "...they had become."]
     ["And when the sun sets..."
      "...all that remains of..."
      "...those colours..."
@@ -85,7 +84,13 @@
     ["...some scholars argue..."
      "...that this lamenting eye..."
      "...to them..."
-     "...was a way to reminder..."]]
+     "...was a way to warn themselves."]
+    ["An old chant:"
+     "\"Let me look at the world I ruled\""
+     "\"And cry\""
+     "\"But one tear\""
+     "\"One late, one bitter tear\""
+     "...this they sang on their deathbeds."]]
 
    :glass4
    [["...I do not know..."
