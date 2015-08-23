@@ -17,9 +17,9 @@
      "\"The Choosing\""
      "...they said:"
      "\"Let this be what we...\""
-     "...\"leave as a ruin\""]
+     "...\"leave as a ruin\"."]
     ["And they thought:"
-     "\"Our intent is life\""
+     "\"Our intent is life\"."
      "*a shiver through your spine*"]
     ["..."
      "...all this past..."
@@ -53,12 +53,14 @@
      "...rub it in at night and the sun..."
      "...would wake them painfully."]
     ["...only monsters..."
-     "...only monsters..."
+     "...-only monsters-..."
      "...would worship a thing..."
      "...that causes so much pain."]]
+
    :glass3
-   [["This one I know well..."
-     "... \"The Tear\""]
+   [["I know this one..."
+     "...mentioned in many books."
+     "...\"The Tear\"..."]
     ["To them crying was both..."
      "...weakness..."
      "...and truth..."
@@ -107,7 +109,7 @@
     ["...times when there were..."
      "...such things as..."
      "...heroes."]
-    ["...This one seems to represent"
+    ["...This one seems to represent..."
      "...a major division..."
      "...which they celebrated."]
     ["...and will this be all that remains?"
@@ -120,16 +122,10 @@
    [["A throne, defaced by time..."
      "... the stone is cold..."
      "... to the touch."
-     "... and here's a Royal Hammer"]
+     "... and here's a Royal Hammer."]
     ["...can't see a coat of arms..."
      "...ultimately unclaimed..."]
     ["... the Hammer..."
      "... symbol of might..."
      "...ironically: it hung..."
-     "...right above their heads..."]]
-
-   :door
-   [["*You try to open the gate*"
-     "...won't budge..."
-     "... need another way out..."
-     "...or something to open it?"]]})
+     "...right above their heads..."]]})

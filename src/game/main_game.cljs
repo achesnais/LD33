@@ -4,16 +4,13 @@
 (defn MainGame [game]
   (let [still-frame 0
         anim-frame-rate 4
-        m-per-sec 100
+        m-per-sec 500
         speed 30
-
         dialogue-style (clj->js {:font "16px Arial"
-                                 :fill "white"})
-        UP (js/Phaser.Keyboard.)]
+                                 :fill "white"})]
     (reify Object
 
       (create [this]
-        (js/console.log "Entering Main Game!")
 
         ;; Define world bounds
         (.. game -world (setBounds 0 -100 1200 1300))
@@ -26,8 +23,7 @@
         (.. game -add (sprite 1080 1080 "bot-col"))
         (.. game -add (sprite 60 1081 "bot-col"))
 
-        ;; Glasses
-
+        ;; Stained Glass
         (let [gs (.. game -add (sprite 0 100 "glass1"))]
           (set! (.. gs -visible) false)
           (set! (.. gs -fixedToCamera) true)
@@ -45,43 +41,63 @@
           (set! (.. gs -fixedToCamera) true)
           (set! (.. this -g4) gs))
 
-
-
-        ;; Define animations
-        (.. this -player -animations (add "down" (clj->js [1 2 3 4]) anim-frame-rate true))
-        (.. this -player -animations (add "up" (clj->js [5 6 7 8]) anim-frame-rate true))
-        (.. this -player -animations (add "right" (clj->js [9 10 11 12]) anim-frame-rate true))
-        (.. this -player -animations (add "left" (clj->js [13 14 15 16]) anim-frame-rate true))
+        ;; Animations
+        (.. this -player -animations
+            (add "down" (clj->js [1 2 3 4]) anim-frame-rate true))
+        (.. this -player -animations
+            (add "up" (clj->js [5 6 7 8]) anim-frame-rate true))
+        (.. this -player -animations
+            (add "right" (clj->js [9 10 11 12]) anim-frame-rate true))
+        (.. this -player -animations
+            (add "left" (clj->js [13 14 15 16]) anim-frame-rate true))
 
         (set! (.. this -lastMov) (.. game -time -now))
 
-        ;; Set up input
+        ;; Input
         (set! (.. this -cursors)
               (.. game -input -keyboard (createCursorKeys)))
-        (set! (.. this -spacebar) (.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR)))
-        (set! (.. this -action) (.. game -input -keyboard (addKey js/Phaser.Keyboard.ENTER)))
+        (set! (.. this -spacebar)
+              (.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR)))
+        (set! (.. this -action)
+              (.. game -input -keyboard (addKey js/Phaser.Keyboard.ENTER)))
 
 
-        ;; Set up camera
+        ;; Camera
         (.. this -player -anchor (setTo 0.5 0.5))
         (.. game -camera (follow (.-player this)))
         #_(set! (.. game -player -cameraOffset) 0 100)
 
-        ;; Set up dialogue box
-        (set! (.. this -dialogueBox) (.. game -add (sprite 0 0 "dialogueBox")))
+        ;; Dialogue box
+        (set! (.. this -dialogueBox)
+              (.. game -add (sprite 0 0 "dialogueBox")))
+        (set! (.. this -dialogueBox -fixedToCamera) true)
+
         (set! (.. this -dialogueText)
               (.. game -add (text (/ (.. game -camera -width) 2)
                                   50
                                   ""
                                   dialogue-style)))
         (.. this -dialogueText -anchor (setTo 0.5 0.5))
-        (set! (.. this -dialogueBox -fixedToCamera) true)
         (set! (.. this -dialogueText -fixedToCamera) true)
-        (set! (.. this -spaceText))
-        (set! (.. this -lastSpace) (.. game -time -now))
-        #_(.triggerDialogue this ["First" "Second"])
 
-        ;; Set up events TODO
+        (set! (.. this -spaceText)
+              (.. game -add (text (* 0.05 (.. game -camera -width))
+                                  10
+                                  "(spacebar: interact)"
+                                  (clj->js {:font "10px Arial" :fill "grey"}))))
+        (set! (.. this -spaceText -fixedToCamera) true)
+
+        (set! (.. this -hammerText)
+              (.. game -add (text (* 0.70 (.. game -camera -width))
+                                  10
+                                  "(enter: pick hammer)"
+                                  (clj->js {:font "10px Arial" :fill "grey"}))))
+        (set! (.. this -hammerText -fixedToCamera) true)
+        (set! (.. this -hammerText -visible) false)
+
+        (set! (.. this -lastSpace) (.. game -time -now))
+
+        ;; Events
         (set! (.. this -glass1Rect) (js/Phaser.Rectangle. 100 775 90 90))
         (set! (.. this -glass1Events) (:glass1 dialogueTree))
 
@@ -104,20 +120,25 @@
         (set! (.. this -weaponSpotted) false)
         (set! (.. this -atThrone) false)
         (set! (.. this -currentGlass) nil)
+        (set! (.. this -first) true)
+        (set! (.. this -triedOpenDoor) false)
 
         ;; Fire intro text
-        (.. this (triggerDialogue :intro))
-
-
-
-        )
+        (.. this (triggerDialogue :intro)))
 
       (update [this]
 
+        ;; Set to visible by the end of update if necessary
+        (set! (.. this -hammerText -visible) false)
+
         ;; If possible, offer weapon
-        (when (and (.. this -atThrone) (.. this -weaponSpotted) (not (.. this -weapon)))
+        (when (and (.. this -atThrone)
+                   (.. this -weaponSpotted)
+                   (.. this -triedOpenDoor)
+                   (not (.. this -weapon))
+                   (not (seq (.-dialogue this))))
           (do
-            ;;TODO text to indicate to pick up
+            (set! (.. this -hammerText -visible) true)
             (when (.. this -action -isDown)
               (set! (.. this -weapon) true)
               (.. this -weaponSprite destroy)
@@ -127,14 +148,15 @@
 
         ;; If possible, offer to break glass
         (when (and (.. this -weapon)
+                   (.. this -triedOpenDoor)
                    (.. this -currentGlass)
                    (seq (.. this -dialogue)))
           (do
-            ;;TODO text to offer to break the glass
+            (set! (.. this -hammerText -visible) true)
+            (set! (.. this -hammerText -text) "(enter: break glass)")
             (when (.. this -action -isDown)
               (set! (.. game -broken) (.. this -currentGlass))
-              (.. game -state (start "ending")))
-            ))
+              (.. game -state (start "ending")))))
 
         ;; hide all glasses until we know we're in a dialogue
         (do
@@ -162,7 +184,6 @@
                 (set! (.. this -lastSpace) (.. game -time -now))
                 (.. this -dialogueText (setText ""))
                 (set! (.-dialogue this) (rest d)))))
-
 
           ;; Basic Movement
           (when (> (- (.. game -time -now)
@@ -229,8 +250,6 @@
 
       (collideWorld [this]
         (let [p (.-player this)]
-
-
           (when (< (.-y p) 100)
             (set! (.-y p) 100))
           (when (> (.-y p) 1072)
@@ -251,96 +270,113 @@
           :else false))
 
       (triggerDialogue [this k]
-        (case k
+        (if (and (.. this -first)
+                 (#{:glass1 :glass2 :glass3 :glass4} k))
+          (do
+            (set! (.. this -first) false)
+            (set! (.. this -dialogue) ["...this place..."
+                                       "...is very old indeed..."
+                                       "...the secrets to making..."
+                                       "...stained glass..."
+                                       "...are long lost..."
+                                       "...and the makers of this..."
+                                       "...remembered..."
+                                       "...only by people like me..."]))
+          (case k
 
-          :glass1
-          (if (seq (.. this -glass1Events))
-            (let [evs (.. this -glass1Events)]
-              (do
-                (set! (.. this -dialogue) (first evs))
-                (set! (.. this -glass1Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Choosing" "..."]))
+            :glass1
+            (if (seq (.. this -glass1Events))
+              (let [evs (.. this -glass1Events)]
+                (do
+                  (set! (.. this -dialogue) (first evs))
+                  (set! (.. this -glass1Events) (rest evs))))
+              (set! (.. this -dialogue) ["The Choosing"
+                                         "..."]))
 
-          :glass2
-          (if (seq (.. this -glass2Events))
-            (let [evs (.. this -glass2Events)]
-              (do
-                (set! (.. this -dialogue) (first evs))
-                (set! (.. this -glass2Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Heracleus" "..."]))
+            :glass2
+            (if (seq (.. this -glass2Events))
+              (let [evs (.. this -glass2Events)]
+                (do
+                  (set! (.. this -dialogue) (first evs))
+                  (set! (.. this -glass2Events) (rest evs))))
+              (set! (.. this -dialogue) ["The Heracleus"
+                                         "..."]))
 
-          :glass3
-          (if (seq (.. this -glass3Events))
-            (let [evs (.. this -glass3Events)]
-              (do
-                (set! (.. this -dialogue) (first evs))
-                (set! (.. this -glass3Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Tear"  "..."]))
+            :glass3
+            (if (seq (.. this -glass3Events))
+              (let [evs (.. this -glass3Events)]
+                (do
+                  (set! (.. this -dialogue) (first evs))
+                  (set! (.. this -glass3Events) (rest evs))))
+              (set! (.. this -dialogue) ["The Tear"
+                                         "..."]))
 
-          :glass4
-          (if (seq (.. this -glass4Events))
-            (let [evs (.. this -glass4Events)]
-              (do
-                (set! (.. this -dialogue) (first evs))
-                (set! (.. this -glass4Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Ascension" "..."]))
+            :glass4
+            (if (seq (.. this -glass4Events))
+              (let [evs (.. this -glass4Events)]
+                (do
+                  (set! (.. this -dialogue) (first evs))
+                  (set! (.. this -glass4Events) (rest evs))))
+              (set! (.. this -dialogue) ["...this one is too much..."
+                                         "...for a name..."
+                                         "..."]))
 
-          :throne
-          (if (seq (.. this -throneEvents))
-            (let [evs (.. this -throneEvents)]
-              (do
-                (set! (.. this -dialogue) (first evs))
-                (set! (.. this -throneEvents) (rest evs))))
-            (set! (.. this -dialogue) ["This throne is long cold." "..."]))
+            :throne
+            (if (seq (.. this -throneEvents))
+              (let [evs (.. this -throneEvents)]
+                (do
+                  (set! (.. this -dialogue) (first evs))
+                  (set! (.. this -throneEvents) (rest evs))))
+              (set! (.. this -dialogue) ["...this throne is long cold...."
+                                         "..."]))
 
-          :door
-          (if (seq (.. this -doorEvents))
-            (let [evs (.. this -doorEvents)]
-              (do
-                (set! (.. this -dialogue) (first evs))
-                (set! (.. this -doorEvents) (rest evs))))
+            :door
             (cond
-              (and (.. this -weapon) (not (.. this -tried)))
+
+              (and (.. this -weapon)
+                   (.. this -triedOpenDoor)
+                   (not (.. this -triedBreakDoor)))
               (do
-                (set! (.. this -tried) true)
+                (set! (.. this -triedBreakDoor) true)
+                (set! (.. this -dialogue) ["*WAM*"
+                                           "..."
+                                           "...barely a scratch..."
+                                           "...I need another way out."]))
+
+              (not (.. this -triedOpenDoor))
+              (do
+                (set! (.. this -triedOpenDoor) true)
                 (set! (.. this -dialogue)
-                      ["*WAM*"
-                       "..."
-                       "...barely a scratch..."
-                       "...I need another way out."]))
-              (.. this -weapon)
+                      ["*You try to open the gate*"
+                       "...won't budge..."
+                       "... need another way out..."
+                       "...or something to break it open?"]))
+
+              (.. this -triedBreakDoor)
               (set! (.. this -dialogue)
                     ["...it's too sturdy..."
-                     "...need another way out."])
+                     "...I can't break it..."
+                     "...I need to find another way out."])
 
               :else
               (set! (.. this -dialogue)
                     ["...must find a way..."
                      "...to open it..."
-                     "...or another way out?"])))
+                     "...or another way out?"]))
 
-          :hammer
-          (set! (.. this -dialogue) ["You pick up the Royal Hammer."
-                                     "... I don't know..."
-                                     "...if it'll work..."
-                                     "...we'll see..."])
+            :hammer
+            (set! (.. this -dialogue) ["You pick up the Royal Hammer."
+                                       "... I don't know..."
+                                       "...if it'll work..."
+                                       "...we'll see..."])
 
-          :intro
-          nil
-          #_(set! (.. this -dialogue) ["*BANG*"
+            :intro
+            (set! (.. this -dialogue) ["*BANG*"
                                        "...damnit..."
                                        "...hope it's not locked..."
                                        "HELLO?"
                                        "...what is this place?"
-                                       "...an old temple?"])))
+                                       "...an old temple?"]))))
 
       (render [this]
-        (comment
-          (.. game -debug (geom (.. this -glass1Rect) "#0fffff"))
-          (.. game -debug (geom (.. this -glass2Rect) "#0fffff"))
-          (.. game -debug (geom (.. this -glass3Rect) "#0fffff"))
-          (.. game -debug (geom (.. this -glass4Rect) "#0fffff"))
-          (.. game -debug (geom (.. this -throneRect) "#0fffff"))
-          (.. game -debug (geom (.. this -doorRect) "#0fffff"))
-          (.. game -debug (spriteInfo (.. this -player) 32 32))
-          (.. game -debug (text (.. game -time -fps) 2 14 "black")))))))
+        ()))))

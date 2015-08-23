@@ -26,13 +26,8 @@
       (.. game -load (spritesheet "playerHammer" "assets/player-hammer.png" 20 40 12)))
 
     (create [this]
-      (set! (.. game -time -advancedTiming) true))
+      (set! (.. game -time -advancedTiming) true)
+      (set! (.. game -stage -smoothed) false))
 
     (update [this]
-      (if (false? (.-ready game))
-        (set! (.-ready game) true)
-        ;; (.. game -state (start "mainGame"))
-        (.. game -state (start "titleScreen"))
-        ;; (do (set! (.. game -broken) :glass1)
-        ;;     (.. game -state (start "ending")))
-        ))))
+      (.. game -state (start "titleScreen")))))
