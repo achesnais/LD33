@@ -290,7 +290,7 @@
                 (do
                   (set! (.. this -dialogue) (first evs))
                   (set! (.. this -glass1Events) (rest evs))))
-              (set! (.. this -dialogue) ["The Choosing"
+              (set! (.. this -dialogue) ["...The Choosing..."
                                          "..."]))
 
             :glass2
@@ -299,7 +299,7 @@
                 (do
                   (set! (.. this -dialogue) (first evs))
                   (set! (.. this -glass2Events) (rest evs))))
-              (set! (.. this -dialogue) ["The Heracleus"
+              (set! (.. this -dialogue) ["...The Heracleus..."
                                          "..."]))
 
             :glass3
@@ -308,7 +308,7 @@
                 (do
                   (set! (.. this -dialogue) (first evs))
                   (set! (.. this -glass3Events) (rest evs))))
-              (set! (.. this -dialogue) ["The Tear"
+              (set! (.. this -dialogue) ["...The Tear..."
                                          "..."]))
 
             :glass4
@@ -317,8 +317,7 @@
                 (do
                   (set! (.. this -dialogue) (first evs))
                   (set! (.. this -glass4Events) (rest evs))))
-              (set! (.. this -dialogue) ["...this one is too much..."
-                                         "...for a name..."
+              (set! (.. this -dialogue) ["...this one evades naming..."
                                          "..."]))
 
             :throne
@@ -328,6 +327,8 @@
                   (set! (.. this -dialogue) (first evs))
                   (set! (.. this -throneEvents) (rest evs))))
               (set! (.. this -dialogue) ["...this throne is long cold...."
+                                         "...its fine white stones..."
+                                         "...useless..."
                                          "..."]))
 
             :door
@@ -341,7 +342,7 @@
                 (set! (.. this -dialogue) ["*WAM*"
                                            "..."
                                            "...barely a scratch..."
-                                           "...I need another way out."]))
+                                           "...need another way out."]))
 
               (not (.. this -triedOpenDoor))
               (do
@@ -356,7 +357,7 @@
               (set! (.. this -dialogue)
                     ["...it's too sturdy..."
                      "...I can't break it..."
-                     "...I need to find another way out."])
+                     "...need to find another way out."])
 
               :else
               (set! (.. this -dialogue)

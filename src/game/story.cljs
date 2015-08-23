@@ -23,10 +23,10 @@
      "*a shiver through your spine*"]
     ["..."
      "...all this past..."
-     "...condensed into the hue of a green.."
+     "...condensed into the hue of a green..."
      "...or a puzzlingly dark shard?"]
     ["...the longer I behold..."
-     "...the more evident."]]
+     "...the more evident it becomes."]]
 
    :glass2
    [["...This one is a beauty..."
@@ -39,11 +39,11 @@
      "...pick it up with gloves..."
      "...borrowed from..."
      "...their ancestors..."
-     "... rubbed its sap unto..."
+     "...rubbed its sap unto..."
      "...whatever they could find..."
      "...leaving a painful mark."]
     ["...the glasswork:"
-     "...letting you observe..."
+     "letting you observe..."
      "...the myriad shades and hues..."
      "...all in the service..."
      "...of this violet Death."]
@@ -70,13 +70,13 @@
      "...pride..."
      "...in this."]
     ["...if I get close enough..."
-     "...I can see my reflection in it..."]
+     "...I can see my reflection in it."]
     ["...another irony:"
      "...accounts say..."
-     "...that the last of their people"
+     "...that the last of their people..."
      "...died alone..."
      "...because no one..."
-     "...would want to look at them."
+     "...would want to look at them..."
      "...so monstruous..."
      "...they had become."]
     ["And when the sun sets..."
@@ -85,8 +85,8 @@
      "...is cold, hard darkness."]
     ["...some scholars argue..."
      "...that this lamenting eye..."
-     "...to them..."
-     "...was a way to warn themselves."]
+     "...was them..."
+     "...warning themselves."]
     ["An old chant:"
      "\"Let me look at the world I ruled\""
      "\"And cry\""
@@ -119,13 +119,13 @@
      "...if I watch long enough."]]
 
    :throne
-   [["A throne, defaced by time..."
+   [["...a throne, defaced by time..."
      "... the stone is cold..."
-     "... to the touch."
+     "... to the touch..."
      "... and here's a Royal Hammer."]
     ["...can't see a coat of arms..."
      "...ultimately unclaimed..."]
     ["... the Hammer..."
      "... symbol of might..."
      "...ironically: it hung..."
-     "...right above their heads..."]]})
+     "...right above their heads."]]})
