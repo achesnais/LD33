@@ -4,7 +4,7 @@
   (reify Object
 
     (create [this]
-      (let [title "Too Late, Too Bitter"
+      (let [title "Because You Had to Escape"
             title-style (clj->js {:font "30px Arial"
                                   :fill "white"})
             title-x (.. game -world -centerX)

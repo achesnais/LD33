@@ -3,11 +3,12 @@
 
 (defn MainGame [game]
   (let [still-frame 0
-        anim-frame-rate 2
-        speed 25
+        anim-frame-rate 4
+        m-per-sec 100
+        speed 30
 
-        dialogue-style (clj->js {:font "20px Arial"
-                                 :fill "white"})
+        dialogue-style (clj->js {:font "16px Arial"
+                                 :fill "dark-grey"})
         UP (js/Phaser.Keyboard.)]
     (reify Object
 
@@ -156,7 +157,7 @@
             (when (and (.. this -spacebar -isDown)
                        (> (- (.. game -time -now)
                              (.. this -lastSpace))
-                          500))
+                          m-per-sec))
               (do
                 (set! (.. this -lastSpace) (.. game -time -now))
                 (.. this -dialogueText (setText ""))
@@ -258,7 +259,7 @@
               (do
                 (set! (.. this -dialogue) (first evs))
                 (set! (.. this -glass1Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Sacred Egg" "..."]))
+            (set! (.. this -dialogue) ["The Choosing" "..."]))
 
           :glass2
           (if (seq (.. this -glass2Events))
@@ -266,7 +267,7 @@
               (do
                 (set! (.. this -dialogue) (first evs))
                 (set! (.. this -glass2Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Flower with Five Leaves" "..."]))
+            (set! (.. this -dialogue) ["The Heracleus" "..."]))
 
           :glass3
           (if (seq (.. this -glass3Events))
@@ -274,7 +275,7 @@
               (do
                 (set! (.. this -dialogue) (first evs))
                 (set! (.. this -glass3Events) (rest evs))))
-            (set! (.. this -dialogue) ["The Crier"  "..."]))
+            (set! (.. this -dialogue) ["The Tear"  "..."]))
 
           :glass4
           (if (seq (.. this -glass4Events))
@@ -340,6 +341,6 @@
           (.. game -debug (geom (.. this -glass3Rect) "#0fffff"))
           (.. game -debug (geom (.. this -glass4Rect) "#0fffff"))
           (.. game -debug (geom (.. this -throneRect) "#0fffff"))
-          (.. game -debug (geom (.. this -doorRect) "#0fffff")))
-        (.. game -debug (spriteInfo (.. this -player) 32 32))
-        (.. game -debug (text (.. game -time -fps) 2 14 "black"))))))
+          (.. game -debug (geom (.. this -doorRect) "#0fffff"))
+          (.. game -debug (spriteInfo (.. this -player) 32 32))
+          (.. game -debug (text (.. game -time -fps) 2 14 "black")))))))
