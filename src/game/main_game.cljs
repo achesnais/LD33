@@ -76,10 +76,10 @@
         #_(.triggerDialogue this ["First" "Second"])
 
         ;; Set up events TODO
-        (set! (.. this -glass1Rect) (js/Phaser.Rectangle. 25 180 80 80))
+        (set! (.. this -glass1Rect) (js/Phaser.Rectangle. 25 380 80 80))
         (set! (.. this -glass1Events) (:glass1 dialogueTree))
 
-        (set! (.. this -glass2Rect) (js/Phaser.Rectangle. 25 380 80 80))
+        (set! (.. this -glass2Rect) (js/Phaser.Rectangle. 25 180 80 80))
         (set! (.. this -glass2Events) (:glass2 dialogueTree))
 
         (set! (.. this -glass3Rect) (js/Phaser.Rectangle. 490 380 80 80))
