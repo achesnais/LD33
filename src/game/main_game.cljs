@@ -8,7 +8,7 @@
         speed 30
 
         dialogue-style (clj->js {:font "16px Arial"
-                                 :fill "dark-grey"})
+                                 :fill "white"})
         UP (js/Phaser.Keyboard.)]
     (reify Object
 

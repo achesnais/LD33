@@ -17,4 +17,5 @@
   (.. game -state (add "ending" Ending ))
   (.. game -state (start "boot")))
 
-(main)
+(set! js/window.onload
+      (main))

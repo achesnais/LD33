@@ -31,6 +31,8 @@
     (update [this]
       (if (false? (.-ready game))
         (set! (.-ready game) true)
-        (.. game -state (start "mainGame"))
-        ;; (.. game -state (start "titleScreen"))
+        ;; (.. game -state (start "mainGame"))
+        (.. game -state (start "titleScreen"))
+        ;; (do (set! (.. game -broken) :glass1)
+        ;;     (.. game -state (start "ending")))
         ))))
