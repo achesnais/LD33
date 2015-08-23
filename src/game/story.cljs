@@ -25,7 +25,7 @@
      "...all this past..."
      "...condensed into the hue of a green.."
      "...or a puzzlingly dark shard?"]
-    ["...the longer I gaze..."
+    ["...the longer I behold..."
      "...the more evident."]]
 
    :glass2
@@ -116,7 +116,7 @@
      "...puzzling notions from..."
      "...another age?"]
     ["...it may appear..."
-     "...if I gaze long enough."]]
+     "...if I watch long enough."]]
 
    :throne
    [["A throne, defaced by time..."
