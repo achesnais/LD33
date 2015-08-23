@@ -21,6 +21,7 @@
       (.. game -load (image "glass4" "assets/glass4.png"))
       (.. game -load (image "glass1" "assets/throne.png"))
       (.. game -load (image "weapon" "assets/weapon.png"))
+      (.. game -load (image "bot-col" "assets/bot-col.png"))
       (.. game -load (spritesheet "player" "assets/player.png" 20 40 17))
       (.. game -load (spritesheet "playerHammer" "assets/player-hammer.png" 20 40 12)))
 

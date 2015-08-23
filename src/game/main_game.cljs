@@ -21,7 +21,9 @@
         (.. game -add (sprite 0 0 "world"))
         (set! (.. this -weaponSprite) (.. game -add (sprite 598 80 "weapon")))
         (.. this -weaponSprite -anchor (setTo 0.5 0.5))
-        (set! (.. this -player) (.. game -add (sprite 600 1000 "player")))
+        (set! (.. this -player) (.. game -add (sprite 600 1072 "player")))
+        (.. game -add (sprite 1080 1080 "bot-col"))
+        (.. game -add (sprite 60 1081 "bot-col"))
 
         ;; Glasses
 
@@ -102,6 +104,11 @@
         (set! (.. this -atThrone) false)
         (set! (.. this -currentGlass) nil)
 
+        ;; Fire intro text
+        (.. this (triggerDialogue :intro))
+
+
+
         )
 
       (update [this]
@@ -138,6 +145,7 @@
         ;; Dialogue situation - no movement
         (if-let [d (seq (.-dialogue this))]
           (do
+            (set! (.. this -player -frame) 0)
             (when-let [g (.. this -currentGlass)]
               (case g
                 :glass1  (set! (.. this -g1 -visible) true)
@@ -198,7 +206,7 @@
         (set! (.. this -atThrone) false)
         (set! (.. this -currentGlass) false)
 
-        #_(.collideWorld this)
+        (.collideWorld this)
 
         (when-let [ce (.collideEvents this)]
           (do
@@ -222,14 +230,14 @@
         (let [p (.-player this)]
 
 
-          (when (< (.-y p) 40)
-            (set! (.-y p) 40))
-          (when (> (.-y p) 560)
-            (set! (.-y p) 560))
-          (when (< (.-x p) 30)
-            (set! (.-x p) 30))
-          (when (> (.-x p) 570)
-            (set! (.-x p) 570))))
+          (when (< (.-y p) 100)
+            (set! (.-y p) 100))
+          (when (> (.-y p) 1072)
+            (set! (.-y p) 1072))
+          (when (< (.-x p) 120)
+            (set! (.-x p) 120))
+          (when (> (.-x p) 1075)
+            (set! (.-x p) 1075))))
 
       (collideEvents [this]
         (cond
@@ -290,10 +298,40 @@
               (do
                 (set! (.. this -dialogue) (first evs))
                 (set! (.. this -doorEvents) (rest evs))))
-            (set! (.. this -dialogue) ["I must find another way out..."]))
+            (cond
+              (and (.. this -weapon) (not (.. this -tried)))
+              (do
+                (set! (.. this -tried) true)
+                (set! (.. this -dialogue)
+                      ["*WAM*"
+                       "..."
+                       "...barely a scratch..."
+                       "...I need another way out."]))
+              (.. this -weapon)
+              (set! (.. this -dialogue)
+                    ["...it's too sturdy..."
+                     "...need another way out."])
+
+              :else
+              (set! (.. this -dialogue)
+                    ["...must find a way..."
+                     "...to open it..."
+                     "...or another way out?"])))
 
           :hammer
-          (set! (.. this -dialogue) ["You pick up the Royal Hammer."])))
+          (set! (.. this -dialogue) ["You pick up the Royal Hammer."
+                                     "... I don't know..."
+                                     "...if it'll work..."
+                                     "...we'll see..."])
+
+          :intro
+          nil
+          #_(set! (.. this -dialogue) ["*BANG*"
+                                       "...damnit..."
+                                       "...hope it's not locked..."
+                                       "HELLO?"
+                                       "...what is this place?"
+                                       "...an old temple?"])))
 
       (render [this]
         (comment
@@ -302,6 +340,6 @@
           (.. game -debug (geom (.. this -glass3Rect) "#0fffff"))
           (.. game -debug (geom (.. this -glass4Rect) "#0fffff"))
           (.. game -debug (geom (.. this -throneRect) "#0fffff"))
-          (.. game -debug (geom (.. this -doorRect) "#0fffff"))
-          (.. game -debug (spriteInfo (.. this -player) 32 32))
-          (.. game -debug (text (.. game -time -fps) 2 14 "black")))))))
+          (.. game -debug (geom (.. this -doorRect) "#0fffff")))
+        (.. game -debug (spriteInfo (.. this -player) 32 32))
+        (.. game -debug (text (.. game -time -fps) 2 14 "black"))))))
