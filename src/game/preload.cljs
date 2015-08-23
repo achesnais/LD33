@@ -21,11 +21,11 @@
       (.. game -load (image "glass4" "assets/glass4.png"))
       (.. game -load (image "glass1" "assets/throne.png"))
       (.. game -load (image "weapon" "assets/weapon.png"))
-      (.. game -load (spritesheet "player" "assets/player.png" 20 40 12))
+      (.. game -load (spritesheet "player" "assets/player.png" 20 40 17))
       (.. game -load (spritesheet "playerHammer" "assets/player-hammer.png" 20 40 12)))
 
     (create [this]
-      ())
+      (set! (.. game -time -advancedTiming) true))
 
     (update [this]
       (if (false? (.-ready game))

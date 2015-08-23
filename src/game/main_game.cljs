@@ -4,7 +4,7 @@
 (defn MainGame [game]
   (let [still-frame 0
         anim-frame-rate 2
-        speed 5
+        speed 25
 
         dialogue-style (clj->js {:font "20px Arial"
                                  :fill "white"})
@@ -45,10 +45,12 @@
 
 
         ;; Define animations
-        (.. this -player -animations (add "down" (clj->js [0 1 2]) anim-frame-rate true))
-        (.. this -player -animations (add "up" (clj->js [3 4 5]) anim-frame-rate true))
-        (.. this -player -animations (add "left" (clj->js [6 7 8]) anim-frame-rate true))
-        (.. this -player -animations (add "right" (clj->js [9 10 11]) anim-frame-rate true))
+        (.. this -player -animations (add "down" (clj->js [1 2 3 4]) anim-frame-rate true))
+        (.. this -player -animations (add "up" (clj->js [5 6 7 8]) anim-frame-rate true))
+        (.. this -player -animations (add "right" (clj->js [9 10 11 12]) anim-frame-rate true))
+        (.. this -player -animations (add "left" (clj->js [13 14 15 16]) anim-frame-rate true))
+
+        (set! (.. this -lastMov) (.. game -time -now))
 
         ;; Set up input
         (set! (.. this -cursors)
@@ -153,36 +155,44 @@
 
 
           ;; Basic Movement
-          (cond
-            (.. this -cursors -up -isDown)
+          (when (> (- (.. game -time -now)
+                      (.. this -lastMov))
+                   200)
             (do
-              (let [y  (.. this -player -y)]
-                (set! (.. this -player -y)
-                      (- y speed)))
-              (.. this -player -animations (play "up")))
+              (cond
+                (.. this -cursors -up -isDown)
+                (do
+                  (let [y  (.. this -player -y)]
+                    (set! (.. this -player -y)
+                          (- y speed)))
+                  (.. this -player -animations (play "up"))
+                  (set! (.. this -lastMov) (.. game -time -now)))
 
-            (.. this -cursors -down -isDown)
-            (do
-              (let [y  (.. this -player -y)]
-                (set! (.. this -player -y)
-                      (+ y speed)))
-              (.. this -player -animations (play "down")))
+                (.. this -cursors -down -isDown)
+                (do
+                  (let [y  (.. this -player -y)]
+                    (set! (.. this -player -y)
+                          (+ y speed)))
+                  (.. this -player -animations (play "down"))
+                  (set! (.. this -lastMov) (.. game -time -now)))
 
-            (.. this -cursors -left -isDown)
-            (do
-              (let [x  (.. this -player -x)]
-                (set! (.. this -player -x)
-                      (- x speed)))
-              (.. this -player -animations (play "left")))
+                (.. this -cursors -left -isDown)
+                (do
+                  (let [x  (.. this -player -x)]
+                    (set! (.. this -player -x)
+                          (- x speed)))
+                  (.. this -player -animations (play "left"))
+                  (set! (.. this -lastMov) (.. game -time -now)))
 
-            (.. this -cursors -right -isDown)
-            (do
-              (let [x  (.. this -player -x)]
-                (set! (.. this -player -x)
-                      (+ x speed)))
-              (.. this -player -animations (play "right")))
+                (.. this -cursors -right -isDown)
+                (do
+                  (let [x  (.. this -player -x)]
+                    (set! (.. this -player -x)
+                          (+ x speed)))
+                  (.. this -player -animations (play "right"))
+                  (set! (.. this -lastMov) (.. game -time -now)))
 
-            :else (set! (.. this -player -frame) still-frame)))
+                :else (set! (.. this -player -frame) still-frame)))))
 
         (set! (.. this -atThrone) false)
         (set! (.. this -currentGlass) false)
@@ -285,10 +295,12 @@
           (set! (.. this -dialogue) ["You pick up the Royal Hammer."])))
 
       (render [this]
-        (.. game -debug (geom (.. this -glass1Rect) "#0fffff"))
-        (.. game -debug (geom (.. this -glass2Rect) "#0fffff"))
-        (.. game -debug (geom (.. this -glass3Rect) "#0fffff"))
-        (.. game -debug (geom (.. this -glass4Rect) "#0fffff"))
-        (.. game -debug (geom (.. this -throneRect) "#0fffff"))
-        (.. game -debug (geom (.. this -doorRect) "#0fffff"))
-        (.. game -debug (spriteInfo (.. this -player) 32 32))))))
+        (comment
+          (.. game -debug (geom (.. this -glass1Rect) "#0fffff"))
+          (.. game -debug (geom (.. this -glass2Rect) "#0fffff"))
+          (.. game -debug (geom (.. this -glass3Rect) "#0fffff"))
+          (.. game -debug (geom (.. this -glass4Rect) "#0fffff"))
+          (.. game -debug (geom (.. this -throneRect) "#0fffff"))
+          (.. game -debug (geom (.. this -doorRect) "#0fffff"))
+          (.. game -debug (spriteInfo (.. this -player) 32 32))
+          (.. game -debug (text (.. game -time -fps) 2 14 "black")))))))
