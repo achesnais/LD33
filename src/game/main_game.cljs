@@ -19,9 +19,9 @@
 
         ;; Populate world
         (.. game -add (sprite 0 0 "world"))
-        (set! (.. this -player) (.. game -add (sprite 600 1000 "player")))
         (set! (.. this -weaponSprite) (.. game -add (sprite 598 80 "weapon")))
         (.. this -weaponSprite -anchor (setTo 0.5 0.5))
+        (set! (.. this -player) (.. game -add (sprite 600 1000 "player")))
 
         ;; Glasses
 
@@ -113,13 +113,14 @@
             (when (.. this -action -isDown)
               (set! (.. this -weapon) true)
               (.. this -weaponSprite destroy)
-              (.. this -player (loadTexture "playerHammer" 0))
+              #_(.. this -player (loadTexture "playerHammer" 0))
               (.. this (triggerDialogue :hammer)))
             ))
 
         ;; If possible, offer to break glass
         (when (and (.. this -weapon)
-                   (.. this -currentGlass))
+                   (.. this -currentGlass)
+                   (seq (.. this -dialogue)))
           (do
             ;;TODO text to offer to break the glass
             (when (.. this -action -isDown)
