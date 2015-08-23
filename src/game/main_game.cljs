@@ -15,12 +15,13 @@
         (js/console.log "Entering Main Game!")
 
         ;; Define world bounds
-        (.. game -world (setBounds 0 -100 600 700))
+        (.. game -world (setBounds 0 -100 1200 1300))
 
         ;; Populate world
         (.. game -add (sprite 0 0 "world"))
-        (set! (.. this -player) (.. game -add (sprite 280 540 "player")))
-        (set! (.. this -weaponSprite) (.. game -add (sprite 295 5 "weapon")))
+        (set! (.. this -player) (.. game -add (sprite 600 1000 "player")))
+        (set! (.. this -weaponSprite) (.. game -add (sprite 598 80 "weapon")))
+        (.. this -weaponSprite -anchor (setTo 0.5 0.5))
 
         ;; Glasses
 
@@ -76,22 +77,22 @@
         #_(.triggerDialogue this ["First" "Second"])
 
         ;; Set up events TODO
-        (set! (.. this -glass1Rect) (js/Phaser.Rectangle. 25 380 80 80))
+        (set! (.. this -glass1Rect) (js/Phaser.Rectangle. 100 775 90 90))
         (set! (.. this -glass1Events) (:glass1 dialogueTree))
 
-        (set! (.. this -glass2Rect) (js/Phaser.Rectangle. 25 180 80 80))
+        (set! (.. this -glass2Rect) (js/Phaser.Rectangle. 100 367 90 90))
         (set! (.. this -glass2Events) (:glass2 dialogueTree))
 
-        (set! (.. this -glass3Rect) (js/Phaser.Rectangle. 490 380 80 80))
+        (set! (.. this -glass3Rect) (js/Phaser.Rectangle. 1010 775 90 90))
         (set! (.. this -glass3Events) (:glass3 dialogueTree))
 
-        (set! (.. this -glass4Rect) (js/Phaser.Rectangle. 490 180 80 80))
+        (set! (.. this -glass4Rect) (js/Phaser.Rectangle. 1010 365 90 90))
         (set! (.. this -glass4Events) (:glass4 dialogueTree))
 
-        (set! (.. this -throneRect) (js/Phaser.Rectangle. 225 20 170 195))
+        (set! (.. this -throneRect) (js/Phaser.Rectangle. 555 100 85 85))
         (set! (.. this -throneEvents) (:throne dialogueTree))
 
-        (set! (.. this -doorRect) (js/Phaser.Rectangle. 285 540 40 40))
+        (set! (.. this -doorRect) (js/Phaser.Rectangle. 565 1030 70 70))
         (set! (.. this -doorEvents) (:door dialogueTree))
 
         (set! (.. this -weapon) false)
@@ -186,7 +187,7 @@
         (set! (.. this -atThrone) false)
         (set! (.. this -currentGlass) false)
 
-        (.collideWorld this)
+        #_(.collideWorld this)
 
         (when-let [ce (.collideEvents this)]
           (do
