@@ -86,14 +86,14 @@
               (.. game -add (text (* 0.05 (.. game -camera -width))
                                   10
                                   "(e : interact)"
-                                  (clj->js {:font "10px Arial" :fill "grey"}))))
+                                  (clj->js {:font "12px Arial" :fill "#dddddd"}))))
         (set! (.. this -interactText -fixedToCamera) true)
 
         (set! (.. this -hammerText)
-              (.. game -add (text (* 0.70 (.. game -camera -width))
+              (.. game -add (text (* 0.65 (.. game -camera -width))
                                   10
                                   "(enter: pick hammer)"
-                                  (clj->js {:font "10px Arial" :fill "grey"}))))
+                                  (clj->js {:font "12px Arial" :fill "#dddddd"}))))
         (set! (.. this -hammerText -fixedToCamera) true)
         (set! (.. this -hammerText -visible) false)
 
