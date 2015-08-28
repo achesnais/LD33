@@ -47,7 +47,7 @@
               ["You close your eyes..."
                "And strike."
                "..."
-               "It's all so old. One blow was enough to shatter it utterly."
+               "It's all so old. One blow was enough to shatter it to pieces."
                "The sound of the hammer dropped on the floor echoes in the large throne room."
                "Carefully you climb out."
                "Shards of all colours litter the ground outside. You pick one up and put it into your pocket."
