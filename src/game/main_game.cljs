@@ -13,15 +13,17 @@
       (create [this]
 
         ;; Define world bounds
-        (.. game -world (setBounds 0 -100 1200 1300))
+        (.. game -world (setBounds 0 -100 500 1300))
 
         ;; Populate world
         (.. game -add (sprite 0 0 "world"))
-        (set! (.. this -weaponSprite) (.. game -add (sprite 598 80 "weapon")))
+        (set! (.. this -weaponSprite) (.. game -add (sprite 250 80 "weapon")))
         (.. this -weaponSprite -anchor (setTo 0.5 0.5))
-        (set! (.. this -player) (.. game -add (sprite 600 1072 "player")))
-        (.. game -add (sprite 1080 1080 "bot-col"))
-        (.. game -add (sprite 60 1081 "bot-col"))
+        (set! (.. this -player) (.. game -add (sprite 252 1072 "player")))
+        (.. game -add (sprite 56 1081 "bot-col")) ;;bot-left X
+        (.. game -add (sprite 56 58 "bot-col")) ;;top-left
+        (.. game -add (sprite 390 1081 "bot-col")) ;; bot right X
+        (.. game -add (sprite 390 58 "bot-col")) ;; top right
 
         ;; Stained Glass
         (let [gs (.. game -add (sprite 0 100 "glass1"))]
@@ -100,19 +102,19 @@
         (set! (.. this -lastInteract) (.. game -time -now))
 
         ;; Events
-        (set! (.. this -glass1Rect) (js/Phaser.Rectangle. 100 775 90 90))
+        (set! (.. this -glass1Rect) (js/Phaser.Rectangle. 90 775 90 90))
         (set! (.. this -glass1Events) (:glass1 dialogueTree))
 
-        (set! (.. this -glass2Rect) (js/Phaser.Rectangle. 100 367 90 90))
+        (set! (.. this -glass2Rect) (js/Phaser.Rectangle. 90 367 90 90))
         (set! (.. this -glass2Events) (:glass2 dialogueTree))
 
-        (set! (.. this -glass3Rect) (js/Phaser.Rectangle. 1010 775 90 90))
+        (set! (.. this -glass3Rect) (js/Phaser.Rectangle. 320 775 90 90))
         (set! (.. this -glass3Events) (:glass3 dialogueTree))
 
-        (set! (.. this -glass4Rect) (js/Phaser.Rectangle. 1010 365 90 90))
+        (set! (.. this -glass4Rect) (js/Phaser.Rectangle. 320 365 90 90))
         (set! (.. this -glass4Events) (:glass4 dialogueTree))
 
-        (set! (.. this -throneRect) (js/Phaser.Rectangle. 555 100 85 85))
+        (set! (.. this -throneRect) (js/Phaser.Rectangle. 210 100 85 85))
         (set! (.. this -throneEvents) (:throne dialogueTree))
 
         (set! (.. this -doorRect) (js/Phaser.Rectangle. 565 1030 70 70))
@@ -256,10 +258,10 @@
             (set! (.-y p) 100))
           (when (> (.-y p) 1072)
             (set! (.-y p) 1072))
-          (when (< (.-x p) 120)
-            (set! (.-x p) 120))
-          (when (> (.-x p) 1075)
-            (set! (.-x p) 1075))))
+          (when (< (.-x p) 110)
+            (set! (.-x p) 110))
+          (when (> (.-x p) 400)
+            (set! (.-x p) 400))))
 
       (collideEvents [this]
         (cond
@@ -382,4 +384,8 @@
                                        "...an old temple?"]))))
 
       (render [this]
-        ()))))
+        (.. game -debug (geom (.. this -throneRect)))
+        (.. game -debug (geom (.. this -glass1Rect)))
+        (.. game -debug (geom (.. this -glass2Rect)))
+        (.. game -debug (geom (.. this -glass3Rect)))
+        (.. game -debug (geom (.. this -glass4Rect)))))))
