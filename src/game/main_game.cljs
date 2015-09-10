@@ -392,10 +392,10 @@
                                        "...what is this place?"
                                        "...an old temple?"]))))
 
-      (render [this]
-        (.. game -debug (geom (.. this -throneRect)))
-        (.. game -debug (geom (.. this -doorRect)))
-        (.. game -debug (geom (.. this -glass1Rect)))
-        (.. game -debug (geom (.. this -glass2Rect)))
-        (.. game -debug (geom (.. this -glass3Rect)))
-        (.. game -debug (geom (.. this -glass4Rect)))))))
+      #_(render [this]
+          (.. game -debug (geom (.. this -throneRect)))
+          (.. game -debug (geom (.. this -doorRect)))
+          (.. game -debug (geom (.. this -glass1Rect)))
+          (.. game -debug (geom (.. this -glass2Rect)))
+          (.. game -debug (geom (.. this -glass3Rect)))
+          (.. game -debug (geom (.. this -glass4Rect)))))))
