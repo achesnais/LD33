@@ -69,7 +69,7 @@
         (set! (.. this -lastInteract) (.. game -time -now))
 
         ;; Spacebar
-        (set! (.. this -interact) (.. game -input -keyboard (addKey js/Phaser.Keyboard.E)))
+        (set! (.. this -interact) (.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR)))
 
         ))
 

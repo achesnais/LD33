@@ -58,12 +58,15 @@
         ;; Input
         (set! (.. this -cursors)
               (.. game -input -keyboard (createCursorKeys)))
-        (set! (.. this -interact)
-              ;;Switching to E as space is not ideal for browsers
-              #_(.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR))
+
+        (set! (.. this -space)
+              (.. game -input -keyboard (addKey js/Phaser.Keyboard.SPACEBAR)))
+        (set! (.. this -e)
               (.. game -input -keyboard (addKey js/Phaser.Keyboard.E)))
-        (set! (.. this -action)
-              (.. game -input -keyboard (addKey js/Phaser.Keyboard.ENTER)))
+        (set! (.. this -t)
+              (.. game -input -keyboard (addKey js/Phaser.Keyboard.T)))
+        (set! (.. this -b)
+              (.. game -input -keyboard (addKey js/Phaser.Keyboard.B)))
 
 
         ;; Camera
@@ -85,19 +88,19 @@
         (set! (.. this -dialogueText -fixedToCamera) true)
 
         (set! (.. this -interactText)
-              (.. game -add (text (* 0.05 (.. game -camera -width))
+              (.. game -add (text (* 0.04 (.. game -camera -width))
                                   10
-                                  "(e : interact)"
+                                  ""
                                   (clj->js {:font "12px Arial" :fill "#dddddd"}))))
         (set! (.. this -interactText -fixedToCamera) true)
 
         (set! (.. this -hammerText)
-              (.. game -add (text (* 0.65 (.. game -camera -width))
+              (.. game -add (text (- (.. game -camera -width) 15)
                                   10
-                                  "(enter: pick hammer)"
+                                  ""
                                   (clj->js {:font "12px Arial" :fill "#dddddd"}))))
         (set! (.. this -hammerText -fixedToCamera) true)
-        (set! (.. this -hammerText -visible) false)
+        (.. this -hammerText -anchor (setTo 1 0))
 
         (set! (.. this -lastInteract) (.. game -time -now))
 
@@ -117,7 +120,7 @@
         (set! (.. this -throneRect) (js/Phaser.Rectangle. 210 100 85 85))
         (set! (.. this -throneEvents) (:throne dialogueTree))
 
-        (set! (.. this -doorRect) (js/Phaser.Rectangle. 565 1030 70 70))
+        (set! (.. this -doorRect) (js/Phaser.Rectangle. 210 1030 80 80))
         (set! (.. this -doorEvents) (:door dialogueTree))
 
         (set! (.. this -weapon) false)
@@ -133,7 +136,8 @@
       (update [this]
 
         ;; Set to visible by the end of update if necessary
-        (set! (.. this -hammerText -visible) false)
+        (set! (.. this -interactText -text) "")
+        (set! (.. this -hammerText -text) "")
 
         ;; If possible, offer weapon
         (when (and (.. this -atThrone)
@@ -142,8 +146,8 @@
                    (not (.. this -weapon))
                    (not (seq (.-dialogue this))))
           (do
-            (set! (.. this -hammerText -visible) true)
-            (when (.. this -action -isDown)
+            (set! (.. this -hammerText -text) "t : take Hammer")
+            (when (.. this -t -isDown)
               (set! (.. this -weapon) true)
               (.. this -weaponSprite destroy)
               #_(.. this -player (loadTexture "playerHammer" 0))
@@ -153,12 +157,13 @@
         ;; If possible, offer to break glass
         (when (and (.. this -weapon)
                    (.. this -triedOpenDoor)
+                   (.. this -triedBreakDoor)
                    (.. this -currentGlass)
                    (seq (.. this -dialogue)))
           (do
             (set! (.. this -hammerText -visible) true)
-            (set! (.. this -hammerText -text) "(enter: break glass)")
-            (when (.. this -action -isDown)
+            (set! (.. this -hammerText -text) "b : break glass")
+            (when (.. this -b -isDown)
               (set! (.. game -broken) (.. this -currentGlass))
               (.. game -state (start "ending")))))
 
@@ -180,11 +185,13 @@
                 :glass3 (set! (.. this -g3 -visible) true)
                 :glass4 (set! (.. this -g4 -visible) true)))
             (.. this -dialogueText (setText (first d)))
-            (when (and (.. this -interact -isDown)
+            (.. this -interactText (setText "space : continue"))
+            (when (and (.. this -space -isDown)
                        (> (- (.. game -time -now)
                              (.. this -lastInteract))
                           m-per-sec))
               (do
+
                 (set! (.. this -lastInteract) (.. game -time -now))
                 (.. this -dialogueText (setText ""))
                 (set! (.-dialogue this) (rest d)))))
@@ -236,12 +243,14 @@
 
         (when-let [ce (.collideEvents this)]
           (do
-
+            (when (empty? (.-dialogue this))
+              (set! (.. this -interactText -text) "e : examine"))
             (cond
               (= :throne ce) (set! (.. this -atThrone) true)
               (not= :door ce) (set! (.. this -currentGlass) ce))
 
-            (when (and (.. this -interact -isDown)
+            (when (and (.. this -e -isDown)
+                       (empty? (.-dialogue this))
                        (> (- (.. game -time -now)
                              (.. this -lastInteract))
                           500))
@@ -385,6 +394,7 @@
 
       (render [this]
         (.. game -debug (geom (.. this -throneRect)))
+        (.. game -debug (geom (.. this -doorRect)))
         (.. game -debug (geom (.. this -glass1Rect)))
         (.. game -debug (geom (.. this -glass2Rect)))
         (.. game -debug (geom (.. this -glass3Rect)))
