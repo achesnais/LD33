@@ -43,7 +43,7 @@
      "...whatever they could find..."
      "...leaving a painful mark."]
     ["...the glasswork:"
-     "letting you observe..."
+     "...letting you observe..."
      "...the myriad shades and hues..."
      "...all in the service..."
      "...of this violet Death."]
