@@ -22,7 +22,7 @@
              :compiler {:main "game.core"
                         :asset-path "js/out"
                         :output-to "target/game.js"
-                        :output-dif "target/js/out"}}}}
+                        :output-dir "target/js/out"}}}}
   :figwheel
   {:http-server-root "public"
    :server-pot 3449
